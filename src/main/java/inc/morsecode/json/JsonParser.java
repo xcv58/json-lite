@@ -156,7 +156,12 @@ public class JsonParser {
 			case '"':
 				String name= nextString();
 				try {
-					while (peek() != ':') { next(); }
+					while (peek() != ':') {
+						String tmp = next();
+						if (!tmp.matches("\\s+")) {
+							throw new MalformedJsonException("Unexpected character '"+ tmp +"' after name '"+ name +"' for object member at line "+ lineNo +","+ charNo +".");
+						}
+					}
 					junk= next();
 				} catch (MalformedJsonException x) {
 					throw new MalformedJsonException("Unexpected character '"+ c +"' after name '"+ name +"' for object member at line "+ lineNo +","+ charNo +".", x);
